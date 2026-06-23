@@ -11,6 +11,10 @@ export default function MainGame({player, setPlayer}) {
     const currentCaves = cavesData.slice(startIndex, startIndex + itemsPerPage)
     const remainingSlots = Math.max(0, itemsPerPage - currentCaves.length)
 
+    const [ isObtained, setIsObtained ] = useState(false)
+
+    const [ result, setResult ] = useState(null)
+
     function handlePrevPage() {
         if (currentPage > 1) setCurrentPage(currentPage - 1)
     }
@@ -19,14 +23,18 @@ export default function MainGame({player, setPlayer}) {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1)
     }
 
-    const [ minedResult, setMinedResult ] = useState(null)
+    const [ isMining, setIsMining ] = useState(false)
+    const [ obtainedOres, setObtainedOres ] = useState([])
 
     const handleMine = (cave) => {
-        const result = mineOre(cave, player, setPlayer)
+        if (isMining) return
 
-        if (result) {
-            setMinedResult(result)
-        }
+        const minedResults = Array.from({ length: 5 }, () => mineOre(cave, player, setPlayer, setIsObtained))
+
+        setObtainedOres((prevOres) => [...prevOres, ...minedResults])
+        setResult(minedResults[minedResults.length - 1] ?? null)
+
+        setIsMining(false)
     }
     
     return(
@@ -42,15 +50,18 @@ export default function MainGame({player, setPlayer}) {
                             <div className="w-full h-full bg-linear-to-br from-amber-300/75 to-gray-900/50 absolute inset-0">
                                 <div className="w-full h-full flex flex-col p-2">
                                     <div className="flex items-center justify-center">
-                                        <span className="sm:p-2 text-sm sm:text-lg text-white text-shadow-2xs font-bold group-hover:animate-floating-text">
+                                        <span className="sm:p-2 text-xs sm:text-lg text-white text-shadow-2xs font-bold group-hover:animate-floating-text">
                                             {cave.name}
                                         </span>
                                     </div>
                                     <button
-                                        onClick={() => handleMine(cave)}
+                                        onClick={() => {
+                                            setIsMining(true)
+                                            handleMine(cave)
+                                        }}
                                         className="w-full flex justify-center items-center bg-amber-600 sm:p-0.5 text-white text-xs sm:text-sm font-bold rounded-md mt-auto cursor-pointer active:bg-amber-600/75 hover:bg-amber-600/75 hover:-translate-y-0.5 transition-all duration-200 ease-in-out"
                                     >
-                                        MINE
+                                        {isMining ? "MINING..." : "MINE"}
                                     </button>
                                 </div>
                             </div>
@@ -96,7 +107,7 @@ export default function MainGame({player, setPlayer}) {
                 </button>
             </div>
 
-            <ObtainedOre player={player} setPlayer={setPlayer} minedResult={minedResult} setMinedResult={setMinedResult} />
+            {isObtained && ( <ObtainedOre setPlayer={setPlayer} oreObtained={result} setIsObtained={setIsObtained} /> )}
 
         </div>
     )
