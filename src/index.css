@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+@theme {
+    --color-gray-700: #a5a5a5;
+    --color-gray-750: #858585;
+    --color-gray-800: #656565;
+    --color-gray-850: #454545;
+    --color-gray-900: #252525;
+    --color-gray-950: #050505;
+
+    --animate-floating-text: floating-text 2s ease-in-out infinite;
+
+    @keyframes floating-text {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-5px)
+        }
+    }
+}
