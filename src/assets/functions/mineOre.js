@@ -1,6 +1,6 @@
 import { calculateFinalWeight } from "./calculateFinalWeight"
 
-export const mineOre = (selectedCave, player, setPlayer) => {
+export const mineOre = (selectedCave, player, setPlayer, setIsObtained) => {
     if (!player) {
         console.error("No player data in playerStatefile!")
         return
@@ -40,10 +40,16 @@ export const mineOre = (selectedCave, player, setPlayer) => {
     if (obtainedOre) {
         obtainedOre.finalWeight = calculateFinalWeight(obtainedOre.baseWeight, 0.15)
         obtainedOre.finalValue = parseFloat(obtainedOre.baseValue * obtainedOre.finalWeight)
+        obtainedOre.isFavorite = false
     }
     
-    setPlayer((prevPlayer) => ({...prevPlayer, bagCapacity: prevPlayer.bagCapacity + 1}))
-    setPlayer((prevPlayer) => ({...prevPlayer, energy: prevPlayer.energy - selectedCave.energyConsumption}))
+    setPlayer((prevPlayer) => ({
+        ...prevPlayer,
+        bagCapacity: prevPlayer.bagCapacity + 1,
+        energy: prevPlayer.energy - selectedCave.energyConsumption
+    }))
+
+    setIsObtained(true)
 
     return obtainedOre
 }
