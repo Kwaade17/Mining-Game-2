@@ -18,6 +18,17 @@
             transform: translateY(-5px)
         }
     }
+    
+    --animate-slide-from-left: slide-from-left 500ms ease-in-out;
+    
+    @keyframes slide-from-left {
+      0% {
+        transform: translateX(-288px);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
 }
 
 input[type="search"]::-webkit-search-decoration,

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from 'react'
 
 export default function Inventory({player, setPlayer}) {
     const [ showDescModal, setShowDescModal ] = useState(false)
@@ -52,6 +52,11 @@ export default function Inventory({player, setPlayer}) {
     }
 
     const handleSellOre = (ore, indexToSell) => {
+        if (ore.isFavorite) {
+          window.alert("You cannot sell this!")
+          return
+        }
+        
         if (indexToSell === null) return
 
         setPlayer((prevPlayer) => ({
@@ -66,7 +71,7 @@ export default function Inventory({player, setPlayer}) {
     }
 
     const filteredInventory = player.inventory.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
     const itemsPerPage = 25
@@ -97,11 +102,11 @@ export default function Inventory({player, setPlayer}) {
                             setShowDescModal(!showDescModal);
                         }}
                         className="relative bg-gray-800 rounded-lg overflow-hidden cursor-pointer hover:border-2 border-yellow-400 focus:border-2 transition-all duration-150 ease-in-out group">
-                        <div className="w-full h-full flex flex-col justify-center items-center gap-1 group-hover:scale-105 group-active:scale-95 transition-transform duration-150 ease-in-out">
-                            <div className="w-8 h-8 rounded-full drop-shadow-sm drop-shadow-black bg-gray-700 overflow-hidden">
+                        <div className="w-full h-full flex flex-col justify-center items-center gap-2 sm:gap-1 group-hover:scale-105 group-active:scale-95 transition-transform duration-150 ease-in-out">
+                            <div className="w-5 h-5 sm:w-8 sm:h-8 rounded-full border border-amber-700 bg-gray-700 overflow-hidden">
                                 <img className="w-full h-full object-cover object-center" src={item.image} alt="Icon" />
                             </div>
-                            <span className="text-xs text-white font-bold">{item.name}</span>
+                            <span className="text-[0.5rem] sm:text-xs text-white font-bold">{item.name}</span>
                         </div>
                         
                         <div className={`${item.isFavorite ? "opacity-100" : "opacity-0"} w-full h-full flex justify-end p-1 absolute inset-0`}>
@@ -138,7 +143,7 @@ export default function Inventory({player, setPlayer}) {
                         <div className="bg-gray-850 w-full rounded-xl p-4 mb-6 text-center border border-gray-700 relative">
                             <span className="block text-xl font-bold text-white mb-2">{oreDesc?.name}</span>
                             <div className="w-full flex justify-center">
-                                <div className="w-14 h-14 rounded-full bg-gray-700 overflow-hidden">
+                                <div className="w-14 h-14 rounded-full border-2 border-amber-700 bg-gray-700 overflow-hidden">
                                     <img className="w-full h-full object-cover object-center" src={oreDesc?.image} alt="Icon" />
                                 </div>
                             </div>
