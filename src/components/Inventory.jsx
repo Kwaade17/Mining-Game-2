@@ -7,6 +7,18 @@ export default function Inventory({player, setPlayer}) {
 
     const [ searchQuery, setSearchQuery ] = useState("")
 
+    const filteredInventory = player.inventory.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+        || item.rarity.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
+    const [ currentPage, setCurrentPage ] = useState(1)
+    const itemsPerPage = 25
+    const totalPages = Math.max(1, Math.ceil(filteredInventory.length/itemsPerPage))
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const currentInventory = filteredInventory.slice(startIndex, startIndex + itemsPerPage)
+    const remainingSlots = Math.max(0, itemsPerPage - currentInventory.length )
+
     const specialColor = (item) => {
         if (!item) return "text-white"
         switch (item.rarity) {
@@ -35,7 +47,10 @@ export default function Inventory({player, setPlayer}) {
     }
 
     const sellAllOres = () => {
-        if (player.inventory.length === 0) return
+        if (player.inventory.length === 0) {
+          window.alert("Nothing to sell, please mine first!")
+          return
+        }
 
         const unFavoriteOres = player.inventory.filter((ore) => !ore.isFavorite)
 
@@ -49,6 +64,8 @@ export default function Inventory({player, setPlayer}) {
             bagCapacity: prevPlayer.bagCapacity - unFavoriteOres.length,
             inventory: prevPlayer.inventory.filter((ore) => ore.isFavorite)
         }))
+
+        setCurrentPage(1)
     }
 
     const handleSellOre = (ore, indexToSell) => {
@@ -56,7 +73,7 @@ export default function Inventory({player, setPlayer}) {
           window.alert("You cannot sell this!")
           return
         }
-        
+
         if (indexToSell === null) return
 
         setPlayer((prevPlayer) => ({
@@ -66,16 +83,21 @@ export default function Inventory({player, setPlayer}) {
             inventory: prevPlayer.inventory.filter((_, index) => index !== indexToSell)
         }))
 
+        if (currentInventory.length === 1) {
+          if (currentPage !== 1) setCurrentPage(currentPage - 1)
+        }
+
         setShowDescModal(false)
         setSelectedOreIndex(null)
     }
 
-    const filteredInventory = player.inventory.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    function handlePrevPage() {
+        if (currentPage > 1) setCurrentPage(currentPage - 1)
+    }
 
-    const itemsPerPage = 25
-    const remainingSlots = Math.max(0, itemsPerPage - filteredInventory.length )
+    function handleNextPage() {
+        if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+    }
     
     return(
         <div className="flex flex-col justify-center items-center bg-gray-900 p-4">
@@ -85,14 +107,14 @@ export default function Inventory({player, setPlayer}) {
                 <input 
                     type="search"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => {setSearchQuery(e.target.value); setCurrentPage(1)}}
                     placeholder="Search inventory..."
                     className="w-full text-white rounded-lg px-2 text-sm focus:outline-none"
                 />
             </div>
 
             <div className="grid grid-cols-5 grid-rows-5 gap-4 w-full max-w-md h-full max-h-2/4 aspect-square mt-4 p-4 bg-gray-850 rounded-xl">
-                {filteredInventory.map((item, index) => (
+                {currentInventory.map((item, index) => (
                     <button
                         key={index}
                         onClick={() => {
@@ -124,6 +146,26 @@ export default function Inventory({player, setPlayer}) {
                 {Array.from({length: remainingSlots}).map((_, idx) => (
                     <div key={idx} className="bg-gray-900 rounded-lg"></div>
                 ))}
+            </div>
+
+            <div className="flex items-center bg-gray-850 p-4 mt-4 rounded-2xl">
+                <button 
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 rounded-2xl ${currentPage === 1 ? 'opacity-50 cursor-not-allowed bg-gray-900' : 'group hover:bg-gray-700/80 bg-gray-750'}`}
+                >
+                    <img className="group-hover:-translate-x-1 transition-transform duration-150 ease-in-out" src="/arrow_back_ios.svg" />
+                </button>
+                <span className="mx-4 text-2xl text-white font-bold tracking-widest">
+                    {currentPage}/{totalPages}
+                </span>
+                <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 rounded-2xl ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed bg-gray-900' : 'group hover:bg-gray-700/80 bg-gray-750'}`}
+                >
+                    <img className="group-hover:translate-x-1 transition-transform duration-150 ease-in-out" src="/arrow_forward_ios.svg" />
+                </button>
             </div>
 
             <button

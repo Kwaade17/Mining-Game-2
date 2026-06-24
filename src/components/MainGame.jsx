@@ -85,37 +85,23 @@ export default function MainGame({player, setPlayer}) {
                             {isMining && (
                               <div className="w-full h-full flex justify-center items-center p-4 fixed inset-0 bg-black/75 text-white z-50">
                                 <div className="w-full max-w-md aspect-square flex flex-col justify-center p-8 rounded-2xl bg-gray-900 border-2 border-amber-600">
-                                  <div className="w-full h-full flex flex-col space-y-2 p-4 rounded-2xl border border-gray-700 bg-gray-850">
-                                    <button
-                                        onClick={() => setIsMining(false)}
-                                        className="self-end mb-4 cursor-pointer"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 -960 960 960"
-                                            className="w-10 h-10 fill-white"
-                                        >
-                                            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
-                                        </svg>
-                                    </button>
-                                    <span className="text-4xl font-bold mt-6">
+                                  <div className="w-full h-full flex flex-col justify-center space-y-2 p-4 rounded-2xl border border-gray-700 bg-gray-850">
+                                    <span className="text-2xl font-semibold mb-10">
                                       Choose Type of Mining
                                     </span>
-                                    <div className="flex flex-col mt-auto space-y-2">
-                                        <button
-                                        onClick={() => handleMine(cave)}
-                                        className="font-bold text-sm p-4 mt-1 rounded-lg bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-400"
-                                        >
-                                            Single Ore
-                                        </button>
-                                        <button
-                                        disabled={player.bagCapacity > player.maxBagCapacity - 2}
-                                        onClick={() => handleMultipleMines(cave)}
-                                        className={`font-bold text-sm p-4 mt-1 rounded-lg ${player.bagCapacity > player.maxBagCapacity - 2 ? "bg-red-400 opacity-50" : "bg-lime-500 hover:bg-green-600 active:bg-green-600"}`}
-                                        >
-                                        {player.bagCapacity > player.maxBagCapacity - 2 ? "Disabled" : `Multiple Ore (x${Math.min(player.maxBagCapacity, player.maxBagCapacity - player.inventory.length, Math.floor(player.energy / cave.energyConsumption))})`}
-                                        </button>
-                                    </div>
+                                    <button
+                                      onClick={() => handleMine(cave)}
+                                      className="font-bold text-sm p-4 mt-1 rounded-lg bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-400"
+                                    >
+                                        Single Ore
+                                      </button>
+                                    <button
+                                      disabled={player.bagCapacity > 8}
+                                      onClick={() => handleMultipleMines(cave)}
+                                      className={`font-bold text-sm p-4 mt-1 rounded-lg ${player.bagCapacity > 8 ? "bg-red-400 opacity-50" : "bg-lime-500 hover:bg-green-600 active:bg-green-600"}`}
+                                    >
+                                      {player.bagCapacity > 8 ? "Disabled" : `Multiple Ore (x${player.maxBagCapacity - player.inventory.length})`}
+                                    </button>
                                   </div>
                                 </div>
                               </div>

@@ -17,7 +17,8 @@ export default function MultipleObtainedOres({setPlayer, obtainedOres, setAreObt
             <p className="text-gray-300 text-center mb-6">You mined a chunk of</p>
             
             {/* Render Obtained Ores */}
-            <div className="grid grid-cols-3 gap-2 aspect-square bg-gray-850 w-full rounded-xl p-4 mb-6 text-center border border-gray-700 overflow-y-auto scrollbar-none">
+            <div className="aspect-square bg-gray-850 w-full rounded-xl p-4 mb-6 text-center border border-gray-700 overflow-y-auto scrollbar-none">
+                <div className="w-full grid grid-cols-3 gap-2">
                 {obtainedOres.map((ore, index) => (
                   <div key={`${ore.name}-${index}`} className="flex flex-col justify-center items-center aspect-square space-y-1 px-1 rounded-lg bg-gray-800">
                     <div className="w-8 h-8 rounded-full border-2 border-amber-700 overflow-hidden">
@@ -25,10 +26,11 @@ export default function MultipleObtainedOres({setPlayer, obtainedOres, setAreObt
                     </div>
                     <div className="w-full flex flex-col justify-around text-white text-[0.5rem] px-0.5">
                       <span>{ore.name}</span>
-                      <span>{ore.finalWeight} kg</span>
+                      <span>${ore.finalValue} - {ore.finalWeight} kg</span>
                     </div>
                   </div>
                 ))}
+                </div>
             </div>
 
             {/* Close Button */}
