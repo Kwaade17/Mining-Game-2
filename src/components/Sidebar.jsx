@@ -38,9 +38,9 @@ export default function Sidebar({player, activeTab, setActiveTab, isToggle, setI
             
             {isToggle && (
                 <>
-                    <div className="w-full h-full sm:hidden backdrop-blur-xs bg-black/50 fixed inset-0" />
+                    <div className="w-full h-full sm:hidden backdrop-blur-xs bg-black/50 fixed inset-0 z-50" />
 
-                    <div className="w-72 min-h-screen sm:hidden p-4 fixed top-0 left-0 z-50 bg-gray-850 border-r-2 border-amber-300">
+                    <div className="w-72 min-h-screen sm:hidden p-4 fixed top-0 z-50 bg-gray-850 border-r-2 border-amber-300 animate-slide-from-left">
                         <button
                             onClick={() => setIsToggle(!isToggle)}
                             className="w-full flex justify-end mb-4"

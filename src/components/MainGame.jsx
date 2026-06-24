@@ -1,7 +1,8 @@
-import { useState } from "react"
+import React, { useState } from 'react'
 import { cavesData } from "../assets/cavesData"
 import { mineOre } from "../assets/functions/mineOre"
 import ObtainedOre from "../Modals/ObtainedOre"
+import MultipleObtainedOres from "../Modals/MultipleObtainedOres"
 
 export default function MainGame({player, setPlayer}) {
     const [ currentPage, setCurrentPage ] = useState(1)
@@ -11,10 +12,6 @@ export default function MainGame({player, setPlayer}) {
     const currentCaves = cavesData.slice(startIndex, startIndex + itemsPerPage)
     const remainingSlots = Math.max(0, itemsPerPage - currentCaves.length)
 
-    const [ isObtained, setIsObtained ] = useState(false)
-
-    const [ result, setResult ] = useState(null)
-
     function handlePrevPage() {
         if (currentPage > 1) setCurrentPage(currentPage - 1)
     }
@@ -22,19 +19,41 @@ export default function MainGame({player, setPlayer}) {
     function handleNextPage() {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1)
     }
-
+    
     const [ isMining, setIsMining ] = useState(false)
+    
+    const [ isObtained, setIsObtained ] = useState(false)
+    const [ areObtained, setAreObtained ] = useState(false)
+
     const [ obtainedOres, setObtainedOres ] = useState([])
+    const [ result, setResult ] = useState(null)
 
     const handleMine = (cave) => {
-        if (isMining) return
-
-        const minedResults = Array.from({ length: 5 }, () => mineOre(cave, player, setPlayer, setIsObtained))
-
-        setObtainedOres((prevOres) => [...prevOres, ...minedResults])
-        setResult(minedResults[minedResults.length - 1] ?? null)
-
+      if (player.bagCapacity === player.maxBagCapacity || player.energy < cave.energyConsumption) {
+        mineOre(cave, player)
         setIsMining(false)
+        return
+      }
+      
+      setResult(mineOre(cave, player, setPlayer, setIsMining) ?? null)
+      setIsObtained(true)
+    }
+
+    const handleMultipleMines = (cave) => {
+      if (player.bagCapacity === player.maxBagCapacity || player.energy < cave.energyConsumption) {
+        mineOre(cave, player)
+        setIsMining(false)
+        return
+      }
+
+      const totalMines = Math.min(player.maxBagCapacity, player.maxBagCapacity - player.inventory.length, Math.floor(player.energy / cave.energyConsumption))
+
+      const minedResults = Array.from({ length: totalMines }, () => mineOre(cave, player, setPlayer, setIsMining))
+
+      setObtainedOres((prevOres) => [...prevOres, ...minedResults])
+      setResult(minedResults[minedResults.length - 1] ?? null)
+      
+      setAreObtained(true)
     }
     
     return(
@@ -55,16 +74,39 @@ export default function MainGame({player, setPlayer}) {
                                         </span>
                                     </div>
                                     <button
-                                        onClick={() => {
-                                            setIsMining(true)
-                                            handleMine(cave)
-                                        }}
+                                        onClick={() => setIsMining(true)}
                                         className="w-full flex justify-center items-center bg-amber-600 sm:p-0.5 text-white text-xs sm:text-sm font-bold rounded-md mt-auto cursor-pointer active:bg-amber-600/75 hover:bg-amber-600/75 hover:-translate-y-0.5 transition-all duration-200 ease-in-out"
                                     >
                                         {isMining ? "MINING..." : "MINE"}
                                     </button>
                                 </div>
                             </div>
+                            
+                            {isMining && (
+                              <div className="w-full h-full flex justify-center items-center p-4 fixed inset-0 bg-black/75 text-white z-50">
+                                <div className="w-full max-w-md aspect-square flex flex-col justify-center p-8 rounded-2xl bg-gray-900 border-2 border-amber-600">
+                                  <div className="w-full h-full flex flex-col justify-center space-y-2 p-4 rounded-2xl border border-gray-700 bg-gray-850">
+                                    <span className="text-2xl font-semibold mb-10">
+                                      Choose Type of Mining
+                                    </span>
+                                    <button
+                                      onClick={() => handleMine(cave)}
+                                      className="font-bold text-sm p-4 mt-1 rounded-lg bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-400"
+                                    >
+                                        Single Ore
+                                      </button>
+                                    <button
+                                      disabled={player.bagCapacity > 8}
+                                      onClick={() => handleMultipleMines(cave)}
+                                      className={`font-bold text-sm p-4 mt-1 rounded-lg ${player.bagCapacity > 8 ? "bg-red-400 opacity-50" : "bg-lime-500 hover:bg-green-600 active:bg-green-600"}`}
+                                    >
+                                      {player.bagCapacity > 8 ? "Disabled" : `Multiple Ore (x${player.maxBagCapacity - player.inventory.length})`}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            
                         </div>
                     ) : (
                         <div key={idx} className="bg-gray-800 rounded-2xl text-white text-sm cursor-not-allowed">
@@ -107,7 +149,8 @@ export default function MainGame({player, setPlayer}) {
                 </button>
             </div>
 
-            {isObtained && ( <ObtainedOre setPlayer={setPlayer} oreObtained={result} setIsObtained={setIsObtained} /> )}
+            {isObtained && (<ObtainedOre setPlayer={setPlayer} oreObtained={result} setIsObtained={setIsObtained} /> )}
+            {areObtained && (<MultipleObtainedOres setPlayer={setPlayer} obtainedOres={obtainedOres} setAreObtained={setAreObtained} />)}
 
         </div>
     )

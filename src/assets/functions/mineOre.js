@@ -1,6 +1,6 @@
 import { calculateFinalWeight } from "./calculateFinalWeight"
 
-export const mineOre = (selectedCave, player, setPlayer, setIsObtained) => {
+export const mineOre = (selectedCave, player, setPlayer, setIsMining) => {
     if (!player) {
         console.error("No player data in playerStatefile!")
         return
@@ -48,8 +48,8 @@ export const mineOre = (selectedCave, player, setPlayer, setIsObtained) => {
         bagCapacity: prevPlayer.bagCapacity + 1,
         energy: prevPlayer.energy - selectedCave.energyConsumption
     }))
-
-    setIsObtained(true)
+    
+    setIsMining(false)
 
     return obtainedOre
 }
