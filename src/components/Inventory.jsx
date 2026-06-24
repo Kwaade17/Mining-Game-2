@@ -157,7 +157,7 @@ export default function Inventory({player, setPlayer}) {
                             </div>
                             <div className="flex justify-between text-sm text-gray-200 mt-1">
                                 <span>Value:</span>
-                                <span className="text-yellow-400 font-semibold">$ {oreDesc?.finalValue?.toFixed(2)}</span>
+                                <span className="text-yellow-400 font-semibold">$ {oreDesc?.finalValue}</span>
                             </div>
 
                             <div className="w-full h-full absolute inset-0">

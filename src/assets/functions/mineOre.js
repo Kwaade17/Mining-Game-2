@@ -39,7 +39,7 @@ export const mineOre = (selectedCave, player, setPlayer, setIsMining) => {
 
     if (obtainedOre) {
         obtainedOre.finalWeight = calculateFinalWeight(obtainedOre.baseWeight, 0.15)
-        obtainedOre.finalValue = parseFloat(obtainedOre.baseValue * obtainedOre.finalWeight)
+        obtainedOre.finalValue = Math.round(obtainedOre.baseValue * obtainedOre.finalWeight)
         obtainedOre.isFavorite = false
     }
     

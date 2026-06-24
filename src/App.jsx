@@ -3,6 +3,7 @@ import { useState } from "react";
 import MainGame from "./components/MainGame";
 import Sidebar from "./components/Sidebar";
 import Inventory from "./components/Inventory";
+import Shop from "./components/Shop";
 
 function App({playerState}) {
   const [ activeTab, setActiveTab ] = useState("Main Game")
@@ -17,9 +18,7 @@ function App({playerState}) {
       case "Inventory":
         return <Inventory player={player} setPlayer={setPlayer} />
       case "Shop":
-        return <div className="w-full h-full flex justify-center items-center bg-lime-600">
-                <span className="text-4xl text-bold font-black">Hello! Welcome to Shop</span>
-               </div>
+        return <Shop player={player} setPlayer={setPlayer} />
       default:
         return <MainGame />
     }
