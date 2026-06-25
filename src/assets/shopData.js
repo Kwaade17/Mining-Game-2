@@ -1,9 +1,36 @@
 export const energyShop = [
   {
     name: "Water",
-    details: "Drink water to gain an additional +50 energy.",
+    details: "Drink Water to gain an additional +50 energy.",
     energy: 50,
     price: 125
+  },
+  {
+    name: "Sugarwater",
+    details: "Drink Sugarwater to gain an additional +100 energy.",
+    energy: 100,
+    price: 250
+  },
+  {
+    name: "Milk",
+    details: "Drink Milk to gain an additional +150 energy.",
+    energy: 150,
+    price: 375
+  },
+  {
+    name: "Milk Zero",
+    details: "Drink Milk Zero to gain an additional +200 energy.",
+    energy: 200,
+    price: 500
+  }
+]
+
+export const energyBundleShop = [
+  {
+    name: "Energy Pack",
+    details: "Capping your energy with an additional +50 energy.",
+    energy: 50,
+    price: 500
   }
 ]
 

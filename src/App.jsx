@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import React, { useState } from 'react';
 import MainGame from "./components/MainGame";
 import Sidebar from "./components/Sidebar";
 import Inventory from "./components/Inventory";
@@ -25,12 +24,14 @@ function App({playerState}) {
   }
 
   return(
-    <div className="w-full h-screen relative grid grid-cols-1 sm:grid-cols-[260px_1fr] bg-gray-950">
-      <button 
-        onClick={() => setIsToggle(!isToggle)}
-        className="mt-4 ml-4 sm:hidden absolute top-0 left-0">
-        <img className="w-10 h-10" src="menu.svg" alt="Menu" />
-      </button>
+    <div className="w-full h-screen relative grid grid-cols-1 sm:grid-cols-[260px_1fr] bg-gray-900">
+      <div className="w-fit h-fit absolute inset-0 top-0 left-0 z-40 sm:hidden">
+        <button 
+          onClick={() => setIsToggle(!isToggle)}
+          className="mt-4 ml-4">
+          <img className="w-10 h-10" src="menu.svg" alt="Menu" />
+        </button>
+      </div>
 
       <Sidebar player={player} activeTab={activeTab} setActiveTab={setActiveTab} isToggle={isToggle} setIsToggle={setIsToggle} />
 
